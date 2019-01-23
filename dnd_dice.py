@@ -8,6 +8,8 @@ from command_handler import CommandHandler
 class DnDDice:
     def __init__(self, token):
         self.dice_pattern = re.compile(r"^(\d*)d(\d+)([-+]\d+)?$")
+        self.modifiers = ['+', '-']
+        self.numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
         self.token = token
         self.client = discord.Client()
         self.ch = CommandHandler(self.client)
@@ -88,7 +90,16 @@ class DnDDice:
     def roll_command(self, message, client, args):
         try:
             roll = []
-            dice_parts, = re.findall(self.dice_pattern, args[0])
+            dice = args[0]
+            if (len(args) == 3
+                    and args[1] in self.modifiers
+                    and args[2] in self.numbers):
+                dice = ''.join([dice, args[1], args[2]])
+            elif (len(args) == 2
+                  and args[1][0] in self.modifiers
+                  and args[1][1] in self.numbers):
+                dice = ''.join([dice, args[1]])
+            dice_parts, = re.findall(self.dice_pattern, dice)
             num, sides, mod = dice_parts
             print(dice_parts, num, sides, mod)
             for i in range(int(num) if num else 1):
