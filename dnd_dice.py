@@ -42,7 +42,18 @@ class DnDDice:
             'args_num': 1,
             'req_args_num': 1,
             'args_name': ['Dice to roll, e.g. 2d6+1'],
-            'description': 'Rolls the dice! (e.g. 2d8, d4, 2d6+1)'
+            'description': 'Rolls the dice. Some examples:\n\n'
+                           '\t\t!roll d6 \t(one d6)\n\n'
+                           '\t\t!roll 2d8 \t(two d8s)\n\n'
+                           '\t\t!roll 3d10-1 \t(three d10s with a -1 on each '
+                           'roll)\n\n'
+                           '\t\t!roll (3d8)+3 \t(three d8s with a +3 to the '
+                           'total)\n\n'
+                           '\t\t!roll 2d8, 2d6 \t(comma-separated: two d8s '
+                           'and 2 '
+                           'd6s)\n\n'
+                           '\t\t!roll d20\n'
+                           '\t\t1d8 \t\t(multiline: one d20 and one d8)\n'
         })
 
         self.client.run(self.token)
