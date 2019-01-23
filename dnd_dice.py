@@ -105,6 +105,8 @@ class DnDDice:
             for i in range(int(num) if num else 1):
                 base = random.randint(1, int(sides))
                 roll.append(base + (int(mod) if mod else 0))
-            return '{}, Total: {}'.format(roll, sum(roll))
+            return ('{} rolled a {}! The result was:\n {}, Total: {}'
+                    .format(message.author.name, dice, roll, sum(roll)))
         except Exception as e:
             print(e)
+            return '{} made an invalid roll.'.format(message.author)
