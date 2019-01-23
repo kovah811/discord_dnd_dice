@@ -1,11 +1,13 @@
 import discord
 import random
+import re
 
 from command_handler import CommandHandler
 
 
 class DnDDice:
     def __init__(self, token):
+        self.dice_pattern = re.compile(r"^(\d*)d(\d+)([-+]\d+)?$")
         self.token = token
         self.client = discord.Client()
         self.ch = CommandHandler(self.client)
@@ -28,6 +30,15 @@ class DnDDice:
             'req_args_num': 0,
             'args_name': ['Number of dice to roll'],
             'description': 'Rolls a d20!'
+        })
+
+        self.ch.add_command({
+            'trigger': '!roll',
+            'function': self.roll_command,
+            'args_num': 1,
+            'req_args_num': 1,
+            'args_name': ['Dice to roll, e.g. 2d6+1'],
+            'description': 'Rolls the dice!'
         })
 
         self.client.run(self.token)
@@ -71,5 +82,18 @@ class DnDDice:
             for i in range(int(args[0]) if args else 1):
                 result.append(random.randint(1, 20))
             return result
+        except Exception as e:
+            print(e)
+
+    def roll_command(self, message, client, args):
+        try:
+            roll = []
+            dice_parts, = re.findall(self.dice_pattern, args[0])
+            num, sides, mod = dice_parts
+            print(dice_parts, num, sides, mod)
+            for i in range(int(num) if num else 1):
+                base = random.randint(1, int(sides))
+                roll.append(base + (int(mod) if mod else 0))
+            return '{}, Total: {}'.format(roll, sum(roll))
         except Exception as e:
             print(e)
