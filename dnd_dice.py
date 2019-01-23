@@ -8,8 +8,10 @@ from command_handler import CommandHandler
 class DnDDice:
     def __init__(self, token):
         self.dice_pattern = re.compile(r"^(\d*)d(\d+)([-+]\d+)?$")
+        self.valid_dice = ['4', '6', '8', '10', '12', '20', '100']
         self.modifiers = ['+', '-']
         self.numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+
         self.token = token
         self.client = discord.Client()
         self.ch = CommandHandler(self.client)
@@ -40,7 +42,7 @@ class DnDDice:
             'args_num': 1,
             'req_args_num': 1,
             'args_name': ['Dice to roll, e.g. 2d6+1'],
-            'description': 'Rolls the dice!'
+            'description': 'Rolls the dice! (e.g. 2d8, d4, 2d6+1)'
         })
 
         self.client.run(self.token)
@@ -81,16 +83,22 @@ class DnDDice:
     def d20_command(self, message, client, args):
         try:
             result = []
+
             for i in range(int(args[0]) if args else 1):
                 result.append(random.randint(1, 20))
-            return result
+
+            return ('{} rolled a {}d20! The result was: {}'.format(
+                message.author.name, int(args[0]) if args else '', result))
+
         except Exception as e:
             print(e)
+            return '{} made an invalid roll.'.format(message.author)
 
     def roll_command(self, message, client, args):
         try:
             roll = []
             dice = args[0]
+
             if (len(args) == 3
                     and args[1] in self.modifiers
                     and args[2] in self.numbers):
@@ -99,14 +107,23 @@ class DnDDice:
                   and args[1][0] in self.modifiers
                   and args[1][1] in self.numbers):
                 dice = ''.join([dice, args[1]])
+
             dice_parts, = re.findall(self.dice_pattern, dice)
             num, sides, mod = dice_parts
+
+            if sides not in self.valid_dice:
+                return ('Allowed dice are: {}'
+                        .format(', '.join(['d' + d for d in self.valid_dice])))
+
             print(dice_parts, num, sides, mod)
+
             for i in range(int(num) if num else 1):
                 base = random.randint(1, int(sides))
                 roll.append(base + (int(mod) if mod else 0))
+
             return ('{} rolled a {}! The result was:\n {}, Total: {}'
                     .format(message.author.name, dice, roll, sum(roll)))
+
         except Exception as e:
             print(e)
             return '{} made an invalid roll.'.format(message.author)
