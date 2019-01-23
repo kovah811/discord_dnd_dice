@@ -96,33 +96,56 @@ class DnDDice:
 
     def roll_command(self, message, client, args):
         try:
-            roll = []
-            dice = args[0]
+            results = []
 
-            if (len(args) == 3
-                    and args[1] in self.modifiers
-                    and args[2] in self.numbers):
-                dice = ''.join([dice, args[1], args[2]])
-            elif (len(args) == 2
-                  and args[1][0] in self.modifiers
-                  and args[1][1] in self.numbers):
-                dice = ''.join([dice, args[1]])
+            args = ''.join(args)
+            print(args)
 
-            dice_parts, = re.findall(self.dice_pattern, dice)
-            num, sides, mod = dice_parts
+            all_dice = []
 
-            if sides not in self.valid_dice:
-                return ('Allowed dice are: {}'
-                        .format(', '.join(['d' + d for d in self.valid_dice])))
+            for dice in re.split(',|\n', args):
+                all_dice.append(dice)
 
-            print(dice_parts, num, sides, mod)
+            print(all_dice)
 
-            for i in range(int(num) if num else 1):
-                base = random.randint(1, int(sides))
-                roll.append(base + (int(mod) if mod else 0))
+            for dice in all_dice:
+                single_mod = 0
+                if dice[0] == '(' and ')' in dice and dice[-1] != ')':
+                    dice, single_mod = dice.replace('(', '').split(')')
 
-            return ('{} rolled a {}! The result was:\n {}, Total: {}'
-                    .format(message.author.name, dice, roll, sum(roll)))
+                    if (single_mod[0] not in self.modifiers
+                            or single_mod[1] not in self.numbers):
+                        return '{} made an invalid roll.'.format(
+                            message.author.name)
+
+                dice_parts, = re.findall(self.dice_pattern, dice)
+                num, sides, mod = dice_parts
+
+                if sides not in self.valid_dice:
+                    return ('Allowed dice are: {}'.format
+                            (', '.join(['d' + d for d in self.valid_dice])))
+
+                print(dice_parts, num, sides, mod)
+
+                roll = []
+                for i in range(int(num) if num else 1):
+                    base = random.randint(1, int(sides))
+                    roll.append(base + (int(mod) if mod else 0))
+
+                if single_mod:
+                    result = ('{} rolled a {} with a {} modifier! The result '
+                              'was:\n {}, Total: {} ({}{})'
+                              .format(message.author.name, dice, single_mod,
+                                      roll, sum(roll) + int(single_mod),
+                                      sum(roll), single_mod))
+                else:
+                    result = ('{} rolled a {}! The result was:\n'
+                              '{}, Total: {}'.format(message.author.name,
+                                                     dice, roll, sum(roll)))
+
+                results.append(result)
+
+            return '\n\n'.join(results)
 
         except Exception as e:
             print(e)
