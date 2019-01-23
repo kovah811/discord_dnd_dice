@@ -92,7 +92,7 @@ class DnDDice:
 
         except Exception as e:
             print(e)
-            return '{} made an invalid roll.'.format(message.author)
+            return '{} made an invalid roll.'.format(message.author.name)
 
     def roll_command(self, message, client, args):
         try:
@@ -126,4 +126,4 @@ class DnDDice:
 
         except Exception as e:
             print(e)
-            return '{} made an invalid roll.'.format(message.author)
+            return '{} made an invalid roll.'.format(message.author.name)
