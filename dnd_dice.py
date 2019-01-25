@@ -24,7 +24,7 @@ class DnDDice:
             'args_num': 0,
             'req_args_num': 0,
             'args_name': [],
-            'description': 'Prints a list of all the commands!'
+            'description': 'Prints a list of all the commands.'
         })
 
         self.ch.add_command({
@@ -33,7 +33,7 @@ class DnDDice:
             'args_num': 1,
             'req_args_num': 0,
             'args_name': ['Number of dice to roll'],
-            'description': 'Rolls a d20!'
+            'description': 'Rolls a d20.'
         })
 
         self.ch.add_command({
@@ -41,7 +41,7 @@ class DnDDice:
             'function': self.roll_command,
             'args_num': 1,
             'req_args_num': 1,
-            'args_name': ['Dice to roll, e.g. 2d6+1'],
+            'args_name': ['Dice to roll'],
             'description': 'Rolls the dice. Some examples:\n\n'
                            '\t\t!roll d6 \t(one d6)\n\n'
                            '\t\t!roll 2d8 \t(two d8s)\n\n'
