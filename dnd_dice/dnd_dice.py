@@ -96,7 +96,16 @@ class DnDDice:
                 print(e)
 
     def commands_command(self, message, client, args):
-        """Displays a list of valid commands."""
+        """Displays a list of valid commands.
+
+        :param message: The discord message object
+        :type message: discord.message.Message
+        :param client: The Discord client object
+        :type client: discord.client.Client
+        :param args: A list of arguments following the command trigger word
+        :type args: list of str
+
+        """
 
         try:
             count = 1
@@ -115,8 +124,10 @@ class DnDDice:
 
         :param message: The discord message object
         :type message: discord.message.Message
+        :param client: The Discord client object
+        :type client: discord.client.Client
         :param args: A list of arguments following the command trigger word
-        :type args: list
+        :type args: list of str
 
         """
 
@@ -138,8 +149,10 @@ class DnDDice:
 
         :param message: The discord message object
         :type message: discord.message.Message
+        :param client: The Discord client object
+        :type client: discord.client.Client
         :param args: A list of arguments following the command trigger word
-        :type args: list
+        :type args: list of str
 
         """
 
