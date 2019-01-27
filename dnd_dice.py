@@ -158,7 +158,7 @@ class DnDDice:
 
             for dice in all_dice:
                 single_mod = None
-                if dice[0] == '(' and ')' in dice:
+                if re.match('\\(.*\\)', dice):
                     dice, single_mod = dice.replace('(', '').split(')')
 
                     try:
