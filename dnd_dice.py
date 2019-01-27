@@ -165,7 +165,7 @@ class DnDDice:
                         single_mod = int(single_mod)
                     except ValueError as e:
                         print(e)
-                        return '{} made an invalid roll.'.format(
+                        return '{} entered an invalid modifier.'.format(
                             message.author.name)
 
                 dice_parts, = re.findall(self.DICE_PATTERN, dice)
