@@ -193,7 +193,7 @@ class DnDDice:
                     base = random.randint(1, int(sides))
                     roll.append(base + (mod if mod else 0))
 
-                if single_mod:
+                if single_mod is not None:
                     result = ('{} rolled a {} with a {} modifier! The result '
                               'was:\n {}, Total: {} ({}{:+d})'
                               .format(message.author.name, dice, single_mod,
