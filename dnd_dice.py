@@ -175,12 +175,19 @@ class DnDDice:
                     return ('Allowed dice are: {}'.format
                             (', '.join(['d' + d for d in self.VALID_DICE])))
 
+                try:
+                    mod = int(mod)
+                except ValueError as e:
+                    print(e)
+                    return '{} entered an invalid modifier.'.format(
+                        message.author.name)
+
                 print(dice_parts, num, sides, mod)
 
                 roll = []
                 for i in range(int(num) if num else 1):
                     base = random.randint(1, int(sides))
-                    roll.append(base + (int(mod) if mod else 0))
+                    roll.append(base + (mod if mod else 0))
 
                 if single_mod:
                     result = ('{} rolled a {} with a {} modifier! The result '
