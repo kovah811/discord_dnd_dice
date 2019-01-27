@@ -92,7 +92,7 @@ class DnDDice:
             except Exception as e:
                 print(e)
 
-    def commands_command(self, message, client, args):
+    def commands_command(self, message, args):
         """Displays a list of valid commands."""
 
         try:
@@ -107,7 +107,7 @@ class DnDDice:
         except Exception as e:
             print(e)
 
-    def d20_command(self, message, client, args):
+    def d20_command(self, message, args):
         """Rolls one (default) or more d20 dice."""
 
         try:
@@ -123,7 +123,7 @@ class DnDDice:
             print(e)
             return '{} made an invalid roll.'.format(message.author.name)
 
-    def roll_command(self, message, client, args):
+    def roll_command(self, message, args):
         """Rolls specified dice plus additional modifiers"""
 
         try:
