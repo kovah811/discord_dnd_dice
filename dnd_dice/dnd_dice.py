@@ -157,17 +157,12 @@ class DnDDice:
         """
 
         try:
-            results = []
-
             args = ''.join(args)
-            print(args)
-
+            results = []
             all_dice = []
 
             for dice in re.split('[,\n]', args):
                 all_dice.append(dice)
-
-            print(all_dice)
 
             for dice in all_dice:
                 single_mod = None
@@ -196,8 +191,6 @@ class DnDDice:
                     print(e)
                     return '{} entered an invalid modifier.'.format(
                         message.author.name)
-
-                print(dice_parts, num, sides, mod)
 
                 roll = []
                 for i in range(int(num) if num else 1):
