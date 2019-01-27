@@ -6,6 +6,16 @@ from command_handler import CommandHandler
 
 
 class DnDDice:
+    """DnDDice bot.
+
+    This bot provides a collection of commands to enable DnD dice rolling in a
+    Discord channel.
+
+    :type token: str
+    :param token: Discord bot token to attach to
+
+    """
+
     def __init__(self, token):
         self.dice_pattern = re.compile(r"^(\d*)d(\d+)([-+]\d+)?$")
         self.valid_dice = ['4', '6', '8', '10', '12', '20', '100']
@@ -59,6 +69,8 @@ class DnDDice:
         self.client.run(self.token)
 
     async def on_ready(self):
+        """on_ready method."""
+
         try:
             print(self.client.user.name)
             print(self.client.user.id)
@@ -66,6 +78,8 @@ class DnDDice:
             print(e)
 
     async def on_message(self, message):
+        """on_message method."""
+
         if message.author == self.client.user:
             pass
         else:
@@ -79,6 +93,8 @@ class DnDDice:
                 print(e)
 
     def commands_command(self, message, client, args):
+        """Displays a list of valid commands."""
+
         try:
             count = 1
             coms = '**Commands List**\n'
@@ -92,6 +108,8 @@ class DnDDice:
             print(e)
 
     def d20_command(self, message, client, args):
+        """Rolls one (default) or more d20 dice."""
+
         try:
             result = []
 
@@ -106,6 +124,8 @@ class DnDDice:
             return '{} made an invalid roll.'.format(message.author.name)
 
     def roll_command(self, message, client, args):
+        """Rolls specified dice plus additional modifiers"""
+
         try:
             results = []
 
