@@ -163,8 +163,10 @@ class DnDDice:
                 if dice[0] == '(' and ')' in dice and dice[-1] != ')':
                     dice, single_mod = dice.replace('(', '').split(')')
 
-                    if (single_mod[0] not in self.modifiers
-                            or single_mod[1] not in self.numbers):
+                    try:
+                        single_mod = int(single_mod)
+                    except ValueError as e:
+                        print(e)
                         return '{} made an invalid roll.'.format(
                             message.author.name)
 
@@ -186,7 +188,7 @@ class DnDDice:
                     result = ('{} rolled a {} with a {} modifier! The result '
                               'was:\n {}, Total: {} ({}{})'
                               .format(message.author.name, dice, single_mod,
-                                      roll, sum(roll) + int(single_mod),
+                                      roll, sum(roll) + single_mod,
                                       sum(roll), single_mod))
                 else:
                     result = ('{} rolled a {}! The result was:\n'
