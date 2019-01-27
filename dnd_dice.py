@@ -151,7 +151,7 @@ class DnDDice:
 
             all_dice = []
 
-            for dice in re.split(',|\n', args):
+            for dice in re.split('[,\n]', args):
                 all_dice.append(dice)
 
             print(all_dice)
