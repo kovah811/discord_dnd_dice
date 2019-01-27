@@ -192,7 +192,7 @@ class DnDDice:
 
                 if single_mod:
                     result = ('{} rolled a {} with a {} modifier! The result '
-                              'was:\n {}, Total: {} ({}{})'
+                              'was:\n {}, Total: {} ({}{:+d})'
                               .format(message.author.name, dice, single_mod,
                                       roll, sum(roll) + single_mod,
                                       sum(roll), single_mod))
