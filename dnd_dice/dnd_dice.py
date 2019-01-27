@@ -2,7 +2,7 @@ import discord
 import random
 import re
 
-from command_handler import CommandHandler
+from dnd_dice.command_handler import CommandHandler
 
 
 class DnDDice:

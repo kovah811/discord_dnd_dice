@@ -1,4 +1,4 @@
-from dnd_dice import DnDDice
+from dnd_dice.dnd_dice import DnDDice
 
 
 TOKEN = '<YOUR_BOT_TOKEN>'
