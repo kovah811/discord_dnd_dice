@@ -157,12 +157,15 @@ class DnDDice:
             print(all_dice)
 
             for dice in all_dice:
-                single_mod = 0
-                if dice[0] == '(' and ')' in dice and dice[-1] != ')':
+                single_mod = None
+                if dice[0] == '(' and ')' in dice:
                     dice, single_mod = dice.replace('(', '').split(')')
 
                     try:
-                        single_mod = int(single_mod)
+                        if len(single_mod) > 0:
+                            single_mod = int(single_mod)
+                        else:
+                            single_mod = 0
                     except ValueError as e:
                         print(e)
                         return '{} entered an invalid modifier.'.format(
