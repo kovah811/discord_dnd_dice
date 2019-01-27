@@ -1,7 +1,7 @@
 class CommandHandler:
     """Discord bot command handler.
 
-    :param client: The Discord client object
+    :param client: The discord client object
     :type client: discord.client.Client
 
     """

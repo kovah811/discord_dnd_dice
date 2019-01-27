@@ -11,7 +11,7 @@ class DnDDice:
     This bot provides a collection of commands to enable DnD dice rolling in a
     Discord channel.
 
-    :param token: Discord bot token to attach to
+    :param token: discord bot token to attach to
     :type token: str
 
     """
@@ -100,7 +100,7 @@ class DnDDice:
 
         :param message: The discord message object
         :type message: discord.message.Message
-        :param client: The Discord client object
+        :param client: The discord client object
         :type client: discord.client.Client
         :param args: A list of arguments following the command trigger word
         :type args: list of str
@@ -124,7 +124,7 @@ class DnDDice:
 
         :param message: The discord message object
         :type message: discord.message.Message
-        :param client: The Discord client object
+        :param client: The discord client object
         :type client: discord.client.Client
         :param args: A list of arguments following the command trigger word
         :type args: list of str
@@ -149,7 +149,7 @@ class DnDDice:
 
         :param message: The discord message object
         :type message: discord.message.Message
-        :param client: The Discord client object
+        :param client: The discord client object
         :type client: discord.client.Client
         :param args: A list of arguments following the command trigger word
         :type args: list of str
