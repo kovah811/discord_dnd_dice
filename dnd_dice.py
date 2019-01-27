@@ -16,12 +16,10 @@ class DnDDice:
 
     """
 
-    def __init__(self, token):
-        self.dice_pattern = re.compile(r"^(\d*)d(\d+)([-+]\d+)?$")
-        self.valid_dice = ['4', '6', '8', '10', '12', '20', '100']
-        self.modifiers = ['+', '-']
-        self.numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+    DICE_PATTERN = re.compile(r"^(\d*)d(\d+)([-+]\d+)?$")
+    VALID_DICE = ['4', '6', '8', '10', '12', '20', '100']
 
+    def __init__(self, token):
         self.token = token
         self.client = discord.Client()
         self.ch = CommandHandler(self.client)
@@ -170,12 +168,12 @@ class DnDDice:
                         return '{} made an invalid roll.'.format(
                             message.author.name)
 
-                dice_parts, = re.findall(self.dice_pattern, dice)
+                dice_parts, = re.findall(self.DICE_PATTERN, dice)
                 num, sides, mod = dice_parts
 
-                if sides not in self.valid_dice:
+                if sides not in self.VALID_DICE:
                     return ('Allowed dice are: {}'.format
-                            (', '.join(['d' + d for d in self.valid_dice])))
+                            (', '.join(['d' + d for d in self.VALID_DICE])))
 
                 print(dice_parts, num, sides, mod)
 
