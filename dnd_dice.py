@@ -86,7 +86,7 @@ class DnDDice:
             try:
                 await self.ch.command_handler(message)
             # message doesn't contain a command trigger
-            except TypeError as e:
+            except TypeError:
                 pass
             # generic python error
             except Exception as e:
