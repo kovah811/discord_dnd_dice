@@ -33,5 +33,3 @@ class CommandHandler:
                                 self.client.send_message(message.channel, 'command "{}" requires {} argument(s) "{}"'
                                                          .format(command['trigger'], command['args_num'], ', '.join(command['args_name'])))
                             )
-                else:
-                    break
