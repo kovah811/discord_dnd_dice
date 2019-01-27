@@ -177,8 +177,6 @@ class DnDDice:
                     try:
                         if len(single_mod) > 0:
                             single_mod = int(single_mod)
-                        else:
-                            single_mod = 0
                     except ValueError as e:
                         print(e)
                         return '{} entered an invalid modifier.'.format(
@@ -206,7 +204,7 @@ class DnDDice:
                     base = random.randint(1, int(sides))
                     roll.append(base + (mod if mod else 0))
 
-                if single_mod is not None:
+                if single_mod is not None and single_mod != '':
                     result = ('{} rolled a {} with a {} modifier! The result '
                               'was:\n {}, Total: {} ({}{:+d})'
                               .format(message.author.name, dice, single_mod,
