@@ -176,7 +176,8 @@ class DnDDice:
                             (', '.join(['d' + d for d in self.VALID_DICE])))
 
                 try:
-                    mod = int(mod)
+                    if len(mod) > 0:
+                        mod = int(mod)
                 except ValueError as e:
                     print(e)
                     return '{} entered an invalid modifier.'.format(
