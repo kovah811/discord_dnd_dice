@@ -11,8 +11,8 @@ class DnDDice:
     This bot provides a collection of commands to enable DnD dice rolling in a
     Discord channel.
 
-    :type token: str
     :param token: Discord bot token to attach to
+    :type token: str
 
     """
 
@@ -78,7 +78,12 @@ class DnDDice:
             print(e)
 
     async def on_message(self, message):
-        """on_message method."""
+        """on_message method.
+
+        :param message: The discord message object
+        :type message: discord.message
+
+        """
 
         if message.author == self.client.user:
             pass
@@ -92,7 +97,7 @@ class DnDDice:
             except Exception as e:
                 print(e)
 
-    def commands_command(self, message, args):
+    def commands_command(self):
         """Displays a list of valid commands."""
 
         try:
@@ -108,7 +113,14 @@ class DnDDice:
             print(e)
 
     def d20_command(self, message, args):
-        """Rolls one (default) or more d20 dice."""
+        """Rolls one (default) or more d20 dice.
+
+        :param message: The discord message object
+        :type message: discord.message
+        :param args: A list of arguments following the command trigger word
+        :type args: list
+
+        """
 
         try:
             result = []
@@ -124,7 +136,14 @@ class DnDDice:
             return '{} made an invalid roll.'.format(message.author.name)
 
     def roll_command(self, message, args):
-        """Rolls specified dice plus additional modifiers"""
+        """Rolls specified dice plus additional modifiers
+
+        :param message: The discord message object
+        :type message: discord.message
+        :param args: A list of arguments following the command trigger word
+        :type args: list
+
+        """
 
         try:
             results = []
