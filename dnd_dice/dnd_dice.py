@@ -109,13 +109,13 @@ class DnDDice:
 
         try:
             count = 1
-            coms = '**Commands List**\n'
+            commands = '**Commands List**\n'
             for command in self.ch.commands:
-                coms += '{}.) {} : {}\n'.format(count,
-                                                command['trigger'],
-                                                command['description'])
+                commands += '{}.) {} : {}\n'.format(count,
+                                                    command['trigger'],
+                                                    command['description'])
                 count += 1
-            return coms
+            return commands
         except Exception as e:
             print(e)
 
