@@ -81,7 +81,7 @@ class DnDDice:
         """on_message method.
 
         :param message: The discord message object
-        :type message: discord.message
+        :type message: discord.message.Message
 
         """
 
@@ -116,7 +116,7 @@ class DnDDice:
         """Rolls one (default) or more d20 dice.
 
         :param message: The discord message object
-        :type message: discord.message
+        :type message: discord.message.Message
         :param args: A list of arguments following the command trigger word
         :type args: list
 
@@ -139,7 +139,7 @@ class DnDDice:
         """Rolls specified dice plus additional modifiers
 
         :param message: The discord message object
-        :type message: discord.message
+        :type message: discord.message.Message
         :param args: A list of arguments following the command trigger word
         :type args: list
 
