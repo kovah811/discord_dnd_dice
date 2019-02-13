@@ -144,7 +144,8 @@ class DnDDice:
             for i in range(num_dice):
                 result.append(random.randint(1, 20))
 
-            return f'{name} rolled a {num_dice}d20! The result was: {result}'
+            return (f'{name} rolled a {num_dice}d20!\n '
+                    f'The result was: {result}')
 
         except Exception as e:
             print(e)
@@ -216,9 +217,9 @@ class DnDDice:
                            'If rolling advantage, Crit!\n'
                            'If rolling disadvantage, Fumble!')
             elif crit:
-                result += '  --  Natural 20!!! (Crit)'
+                result += '  --  Natural 20! (Crit)'
             elif fumble:
-                result += '  -- Natural 1!!! (Fumble)'
+                result += '  -- Natural 1! (Fumble)'
 
             results.append(result)
 
