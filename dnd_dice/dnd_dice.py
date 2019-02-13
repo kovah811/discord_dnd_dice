@@ -170,19 +170,19 @@ class DnDDice:
         for dice in re.split('[,\n]', args):
             all_dice.append(dice)
 
-        try:
-            for dice in all_dice:
-                single_mod = None
-                if re.match('\\(.*\\)', dice):
-                    dice, single_mod = dice[1:].split(')')
+        for dice in all_dice:
+            single_mod = None
+            if re.match('\\(.*\\)', dice):
+                dice, single_mod = dice[1:].split(')')
 
-                    try:
-                        if len(single_mod) > 0:
-                            single_mod = int(single_mod)
-                    except ValueError as e:
-                        print(e)
-                        return f'{name} entered an invalid modifier.'
+                try:
+                    if len(single_mod) > 0:
+                        single_mod = int(single_mod)
+                except ValueError as e:
+                    print(e)
+                    return f'{name} entered an invalid modifier.'
 
+            try:
                 dice_parts, = re.findall(self.DICE_PATTERN, dice)
                 num, sides, mod = dice_parts
 
@@ -212,8 +212,8 @@ class DnDDice:
 
                 results.append(result)
 
-            return '\n\n'.join(results)
+            except Exception as e:
+                print(e)
+                return f'{name} made an invalid roll.'
 
-        except Exception as e:
-            print(e)
-            return f'{name} made an invalid roll.'
+        return '\n\n'.join(results)
