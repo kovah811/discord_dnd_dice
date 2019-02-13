@@ -192,8 +192,11 @@ class DnDDice:
             mod = int(mod) if mod else 0
 
             roll = []
+            crit = False
             for i in range(int(num) if num else 1):
                 base = random.randint(1, int(sides))
+                if base == 20:
+                    crit = True
                 roll.append(base + mod)
 
             if single_mod != 0:
@@ -204,6 +207,9 @@ class DnDDice:
             else:
                 result = (f'{name} rolled a {dice}! The result was:\n'
                           f'{roll}, Total: {sum(roll)}')
+
+            if crit:
+                result += '  --  Natural 20!!!'
 
             results.append(result)
 
