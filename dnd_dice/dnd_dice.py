@@ -171,13 +171,12 @@ class DnDDice:
             all_dice.append(dice)
 
         for dice in all_dice:
-            single_mod = None
+            single_mod = 0
             if re.match('\\(.*\\)', dice):
                 dice, single_mod = dice[1:].split(')')
 
                 try:
-                    if len(single_mod) > 0:
-                        single_mod = int(single_mod)
+                    single_mod = int(single_mod) if single_mod else 0
                 except ValueError:
                     return f'{name} used an invalid modifier: [{single_mod}]'
 
@@ -197,7 +196,7 @@ class DnDDice:
                 base = random.randint(1, int(sides))
                 roll.append(base + mod)
 
-            if single_mod is not None and single_mod != '':
+            if single_mod != 0:
                 result = (f'{name} rolled a {dice} with a '
                           f'{single_mod:+d} modifier! The result was:\n'
                           f'{roll}, Total: {sum(roll) + single_mod} '
