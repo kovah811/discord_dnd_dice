@@ -41,7 +41,8 @@ class DnDDice:
             'args_num': 1,
             'req_args_num': 0,
             'args_name': ['Number of dice to roll'],
-            'description': 'Rolls a d20.'
+            'description': 'Rolls a d20. \n'
+                           '\t\t!d20 <number of dice to roll> (default 1)'
         })
 
         self.ch.add_command({
@@ -50,7 +51,8 @@ class DnDDice:
             'args_num': 1,
             'req_args_num': 1,
             'args_name': ['Dice to roll'],
-            'description': 'Rolls the dice. Some examples:\n\n'
+            'description': 'Rolls the dice.\n'
+                           '\t\tExamples:\n'
                            '\t\t!roll d6 \t(one d6)\n\n'
                            '\t\t!roll 2d8 \t(two d8s)\n\n'
                            '\t\t!roll 3d10-1 \t(three d10s with a -1 on each '
