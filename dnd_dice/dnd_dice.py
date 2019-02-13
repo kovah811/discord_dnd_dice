@@ -193,10 +193,13 @@ class DnDDice:
 
             roll = []
             crit = False
+            fumble = False
             for i in range(int(num) if num else 1):
                 base = random.randint(1, int(sides))
                 if base == 20:
                     crit = True
+                elif base == 1:
+                    fumble = True
                 roll.append(base + mod)
 
             if single_mod != 0:
@@ -208,8 +211,14 @@ class DnDDice:
                 result = (f'{name} rolled a {dice}! The result was:\n'
                           f'{roll}, Total: {sum(roll)}')
 
-            if crit:
-                result += '  --  Natural 20!!!'
+            if crit and fumble:
+                result += ('  --  Natural 20 and natural 1!\n'
+                           'If rolling advantage, Crit!\n'
+                           'If rolling disadvantage, Fumble!')
+            elif crit:
+                result += '  --  Natural 20!!! (Crit)'
+            elif fumble:
+                result += '  -- Natural 1!!! (Fumble)'
 
             results.append(result)
 
