@@ -195,7 +195,7 @@ class DnDDice:
             roll = []
             for i in range(int(num) if num else 1):
                 base = random.randint(1, int(sides))
-                roll.append(base + (mod if mod else 0))
+                roll.append(base + mod)
 
             if single_mod is not None and single_mod != '':
                 result = (f'{name} rolled a {dice} with a '
