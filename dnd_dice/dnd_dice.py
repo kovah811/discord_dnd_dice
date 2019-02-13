@@ -178,42 +178,34 @@ class DnDDice:
                 try:
                     if len(single_mod) > 0:
                         single_mod = int(single_mod)
-                except ValueError as e:
-                    print(e)
-                    return f'{name} entered an invalid modifier.'
+                except ValueError:
+                    return f'{name} used an invalid modifier: [{single_mod}]'
 
             try:
                 dice_parts, = re.findall(self.DICE_PATTERN, dice)
                 num, sides, mod = dice_parts
+            except ValueError:
+                return f'{name} made an invalid roll: [{dice}]'
 
-                if sides not in self.VALID_DICE:
-                    return f'Allowed dice are: {self.print_valid_dice()}'
+            if sides not in self.VALID_DICE:
+                return f'Allowed dice are: {self.print_valid_dice()}'
 
-                try:
-                    if len(mod) > 0:
-                        mod = int(mod)
-                except ValueError as e:
-                    print(e)
-                    return f'{name} entered an invalid modifier.'
+            mod = int(mod) if mod else 0
 
-                roll = []
-                for i in range(int(num) if num else 1):
-                    base = random.randint(1, int(sides))
-                    roll.append(base + (mod if mod else 0))
+            roll = []
+            for i in range(int(num) if num else 1):
+                base = random.randint(1, int(sides))
+                roll.append(base + (mod if mod else 0))
 
-                if single_mod is not None and single_mod != '':
-                    result = (f'{name} rolled a {dice} with a '
-                              f'{single_mod:+d} modifier! The result was:\n'
-                              f'{roll}, Total: {sum(roll) + single_mod} '
-                              f'({sum(roll)}{single_mod:+d})')
-                else:
-                    result = (f'{name} rolled a {dice}! The result was:\n'
-                              f'{roll}, Total: {sum(roll)}')
+            if single_mod is not None and single_mod != '':
+                result = (f'{name} rolled a {dice} with a '
+                          f'{single_mod:+d} modifier! The result was:\n'
+                          f'{roll}, Total: {sum(roll) + single_mod} '
+                          f'({sum(roll)}{single_mod:+d})')
+            else:
+                result = (f'{name} rolled a {dice}! The result was:\n'
+                          f'{roll}, Total: {sum(roll)}')
 
-                results.append(result)
-
-            except Exception as e:
-                print(e)
-                return f'{name} made an invalid roll.'
+            results.append(result)
 
         return '\n\n'.join(results)
