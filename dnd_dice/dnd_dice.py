@@ -66,6 +66,9 @@ class DnDDice:
 
         self.client.run(self.token)
 
+    def print_valid_dice(self):
+        return ', '.join(['d' + d for d in self.VALID_DICE])
+
     async def on_ready(self):
         """on_ready method."""
 
@@ -111,9 +114,8 @@ class DnDDice:
             count = 1
             commands = '**Commands List**\n'
             for command in self.ch.commands:
-                commands += '{}.) {} : {}\n'.format(count,
-                                                    command['trigger'],
-                                                    command['description'])
+                commands += (f"{count}.) {command['trigger']} : "
+                             f"{command['description']}\n")
                 count += 1
             return commands
         except Exception as e:
@@ -131,18 +133,20 @@ class DnDDice:
 
         """
 
+        name = message.author.name
+        num_dice = int(args[0]) if args else 1
+
         try:
             result = []
 
-            for i in range(int(args[0]) if args else 1):
+            for i in range(num_dice):
                 result.append(random.randint(1, 20))
 
-            return ('{} rolled a {}d20! The result was: {}'.format(
-                message.author.name, int(args[0]) if args else '', result))
+            return f'{name} rolled a {num_dice}d20! The result was: {result}'
 
         except Exception as e:
             print(e)
-            return '{} made an invalid roll.'.format(message.author.name)
+            return f'{name} made an invalid roll.'
 
     def roll_command(self, message, client, args):
         """Rolls specified dice plus additional modifiers
@@ -156,14 +160,15 @@ class DnDDice:
 
         """
 
+        name = message.author.name
+        args = ''.join(args)
+        results = []
+        all_dice = []
+
+        for dice in re.split('[,\n]', args):
+            all_dice.append(dice)
+
         try:
-            args = ''.join(args)
-            results = []
-            all_dice = []
-
-            for dice in re.split('[,\n]', args):
-                all_dice.append(dice)
-
             for dice in all_dice:
                 single_mod = None
                 if re.match('\\(.*\\)', dice):
@@ -174,23 +179,20 @@ class DnDDice:
                             single_mod = int(single_mod)
                     except ValueError as e:
                         print(e)
-                        return '{} entered an invalid modifier.'.format(
-                            message.author.name)
+                        return f'{name} entered an invalid modifier.'
 
                 dice_parts, = re.findall(self.DICE_PATTERN, dice)
                 num, sides, mod = dice_parts
 
                 if sides not in self.VALID_DICE:
-                    return ('Allowed dice are: {}'.format
-                            (', '.join(['d' + d for d in self.VALID_DICE])))
+                    return f'Allowed dice are: {self.print_valid_dice()}'
 
                 try:
                     if len(mod) > 0:
                         mod = int(mod)
                 except ValueError as e:
                     print(e)
-                    return '{} entered an invalid modifier.'.format(
-                        message.author.name)
+                    return f'{name} entered an invalid modifier.'
 
                 roll = []
                 for i in range(int(num) if num else 1):
@@ -198,15 +200,13 @@ class DnDDice:
                     roll.append(base + (mod if mod else 0))
 
                 if single_mod is not None and single_mod != '':
-                    result = ('{} rolled a {} with a {:+d} modifier! The result '
-                              'was:\n {}, Total: {} ({}{:+d})'
-                              .format(message.author.name, dice, single_mod,
-                                      roll, sum(roll) + single_mod,
-                                      sum(roll), single_mod))
+                    result = (f'{name} rolled a {dice} with a '
+                              f'{single_mod:+d} modifier! The result was:\n'
+                              f'{roll}, Total: {sum(roll) + single_mod} '
+                              f'({sum(roll)}{single_mod:+d})')
                 else:
-                    result = ('{} rolled a {}! The result was:\n'
-                              '{}, Total: {}'.format(message.author.name,
-                                                     dice, roll, sum(roll)))
+                    result = (f'{name} rolled a {dice}! The result was:\n'
+                              f'{roll}, Total: {sum(roll)}')
 
                 results.append(result)
 
@@ -214,4 +214,4 @@ class DnDDice:
 
         except Exception as e:
             print(e)
-            return '{} made an invalid roll.'.format(message.author.name)
+            return f'{name} made an invalid roll.'
