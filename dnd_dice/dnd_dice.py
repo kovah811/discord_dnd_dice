@@ -204,7 +204,8 @@ class DnDDice:
         all_dice = []
 
         for dice in re.split('[,\n]', args):
-            all_dice.append(dice)
+            if len(dice) > 0:
+                all_dice.append(dice)
 
         for dice in all_dice:
             single_mod = 0
