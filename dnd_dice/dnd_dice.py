@@ -162,20 +162,29 @@ class DnDDice:
         """
 
         name = message.author.name
-        num_dice = int(args[0]) if args else 1
+
+        result = []
+        crit = False
+        fumble = False
 
         try:
-            result = []
+            num_dice = int(args[0]) if args else 1
+        except ValueError:
+            return (f'{name} made an invalid roll: '
+                    f'[{args[0]}] is not a valid number of dice.')
 
-            for i in range(num_dice):
-                result.append(random.randint(1, 20))
+        for i in range(num_dice):
+            roll = random.randint(1, 20)
+            if roll == 20:
+                crit = True
+            elif roll == 1:
+                fumble = True
+            result.append(roll)
 
-            return (f'{name} rolled a {num_dice}d20!\n '
-                    f'The result was: {result}')
+        minmax_msg = self.get_d20_minmax_msg(crit, fumble)
 
-        except Exception as e:
-            print(e)
-            return f'{name} made an invalid roll.'
+        return (f'{name} rolled a {num_dice}d20!\n '
+                f'The result was: {result} {minmax_msg}')
 
     def roll_command(self, message, client, args):
         """Rolls specified dice plus additional modifiers
