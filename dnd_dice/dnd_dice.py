@@ -68,7 +68,9 @@ class DnDDice:
 
         self.client.run(self.token)
 
-    def print_valid_dice(self):
+    def get_valid_dice(self):
+        """Return string representation of valid dice types."""
+
         return ', '.join(['d' + d for d in self.VALID_DICE])
 
     async def on_ready(self):
