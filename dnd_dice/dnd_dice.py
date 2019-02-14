@@ -125,6 +125,30 @@ class DnDDice:
         except Exception as e:
             print(e)
 
+    @staticmethod
+    def get_d20_minmax_msg(crit, fumble):
+        """Return a message to append to results if d20 roll is 1 or 20.
+
+        :param crit: Whether or not a natural 20 was rolled
+        :type crit: bool
+        :param fumble: Whether or not a natural 1 was rolled
+        :type fumble: bool
+
+        """
+
+        msg = ''
+
+        if crit is True and fumble is True:
+            msg = ('  --  Natural 20 and natural 1!\n '
+                   'If rolling advantage, Crit!\n '
+                   'If rolling disadvantage, Fumble!')
+        elif crit is True:
+            msg = '  --  Natural 20! (Crit)'
+        elif fumble is True:
+            msg = '  --  Natural 1! (Fumble)'
+
+        return msg
+
     def d20_command(self, message, client, args):
         """Rolls one (default) or more d20 dice.
 
@@ -214,14 +238,7 @@ class DnDDice:
                 result = (f'{name} rolled a {dice}! The result was:\n'
                           f'{roll}, Total: {sum(roll)}')
 
-            if crit and fumble:
-                result += ('  --  Natural 20 and natural 1!\n'
-                           'If rolling advantage, Crit!\n'
-                           'If rolling disadvantage, Fumble!')
-            elif crit:
-                result += '  --  Natural 20! (Crit)'
-            elif fumble:
-                result += '  -- Natural 1! (Fumble)'
+            result += self.get_d20_minmax_msg(crit, fumble)
 
             results.append(result)
 
