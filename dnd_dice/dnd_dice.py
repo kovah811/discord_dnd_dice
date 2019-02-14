@@ -240,11 +240,11 @@ class DnDDice:
 
             if single_mod != 0:
                 result = (f'{name} rolled a {dice} with a '
-                          f'{single_mod:+d} modifier! The result was:\n'
+                          f'{single_mod:+d} modifier! The result was:\n '
                           f'{roll}, Total: {sum(roll) + single_mod} '
                           f'({sum(roll)}{single_mod:+d})')
             else:
-                result = (f'{name} rolled a {dice}! The result was:\n'
+                result = (f'{name} rolled a {dice}! The result was:\n '
                           f'{roll}, Total: {sum(roll)}')
 
             result += self.get_d20_minmax_msg(crit, fumble)
