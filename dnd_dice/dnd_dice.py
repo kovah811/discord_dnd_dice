@@ -232,9 +232,9 @@ class DnDDice:
             fumble = False
             for i in range(int(num) if num else 1):
                 base = random.randint(1, int(sides))
-                if base == 20:
+                if sides == '20' and base == 20:
                     crit = True
-                elif base == 1:
+                elif sides == '20' and base == 1:
                     fumble = True
                 roll.append(base + mod)
 
