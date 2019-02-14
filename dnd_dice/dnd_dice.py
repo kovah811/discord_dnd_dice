@@ -223,7 +223,7 @@ class DnDDice:
                 return f'{name} made an invalid roll: [{dice}]'
 
             if sides not in self.VALID_DICE:
-                return f'Allowed dice are: {self.print_valid_dice()}'
+                return f'Allowed dice are: {self.get_valid_dice()}'
 
             mod = int(mod) if mod else 0
 
