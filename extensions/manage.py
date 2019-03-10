@@ -3,14 +3,31 @@ from discord.ext import commands
 
 
 class Manage:
+    """The management cog.
+
+    :param client: the discord client object
+    :type client: discord.ext.commands.Bot
+
+    """
+
     def __init__(self, client):
         self.client = client
 
     async def on_message_delete(self, message):
+        """The on_message_delete method."""
         await self.client.send_message(message.channel, 'Message deleted.')
 
     @commands.command(pass_context=True)
     async def load(self, ctx, extension):
+        """Loads an extension/cog.
+
+        :param ctx: the discord command context object
+        :type ctx: discord.ext.commands.Context
+        :param extension: extension/cog to load
+        :type extension: str
+
+        """
+
         author = ctx.message.author.display_name
 
         try:
@@ -22,6 +39,17 @@ class Manage:
 
     @commands.command(pass_context=True)
     async def unload(self, ctx, extension):
+        """Unloads an extension/cog.
+
+        Note: The 'manage' cog is not allowed to be unloaded.
+
+        :param ctx: the discord command context object
+        :type ctx: discord.ext.commands.Context
+        :param extension: extension/cog to unload
+        :type extension: str
+
+        """
+
         author = ctx.message.author.display_name
 
         if extension == 'manage':
@@ -38,4 +66,5 @@ class Manage:
 
 
 def setup(client):
+    """The setup function."""
     client.add_cog(Manage(client))
