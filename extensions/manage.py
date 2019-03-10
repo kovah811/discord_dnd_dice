@@ -15,7 +15,7 @@ class Manage:
 
     async def on_ready(self):
         """The on_ready event."""
-        
+
         print('Bot online.')
 
     async def on_message_delete(self, message):
