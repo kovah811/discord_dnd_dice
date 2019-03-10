@@ -1,3 +1,4 @@
+import random
 import re
 
 import discord
@@ -53,15 +54,41 @@ class Roll:
         return msg
 
     @commands.command(pass_context=True)
-    async def d20(self, ctx):
-        """The d20 command.
+    async def d20(self, ctx, num_dice='1'):
+        """Roll one (default) or more d20 dice.
 
         :param ctx: the discord command context object
         :type ctx: discord.ext.commands.Context
+        :param num_dice: Number of dice; 1 by default
+        :type num_dice: str
 
         """
 
-        await self.client.say('d20')
+        name = ctx.message.author.display_name
+
+        result = []
+        crit = False
+        fumble = False
+
+        try:
+            num_dice = int(num_dice)
+        except ValueError:
+            await self.client.say(f'{name} made an invalid roll: [{num_dice}] '
+                                  f'is not a valid number of dice.')
+            return
+
+        for i in range(num_dice):
+            roll = random.randint(1, 20)
+            if roll == 20:
+                crit = True
+            elif roll == 1:
+                fumble = True
+            result.append(roll)
+
+        minmax_msg = self.get_d20_minmax_msg(crit, fumble)
+
+        await self.client.say(f'{name} rolled a {num_dice}d20!\n '
+                              f'The result was: {result} {minmax_msg}')
 
     @commands.command(pass_context=True)
     async def roll(self, ctx):
