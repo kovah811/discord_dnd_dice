@@ -14,10 +14,12 @@ class Manage:
         self.client = client
 
     async def on_ready(self):
+        """The on_ready event."""
+        
         print('Bot online.')
 
     async def on_message_delete(self, message):
-        """The on_message_delete method."""
+        """The on_message_delete event."""
 
         await self.client.send_message(message.channel, 'Message deleted.')
 
