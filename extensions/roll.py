@@ -87,19 +87,94 @@ class Roll:
 
         minmax_msg = self.get_d20_minmax_msg(crit, fumble)
 
-        await self.client.say(f'{name} rolled a {num_dice}d20!\n '
+        await self.client.say(f'{name} rolled a {num_dice}d20!\n'
                               f'The result was: {result} {minmax_msg}')
 
     @commands.command(pass_context=True)
-    async def roll(self, ctx):
-        """The roll command.
+    async def roll(self, ctx, *, args=None):
+        """Roll the specified dice plus optional modifiers
+
+        Example rolls:
+
+           !roll d6            (one d6)
+           !roll 2d8           (two d8s)
+           !roll 3d10-1        (three d10s with a -1 on each roll)
+           !roll (3d8)+3       (three d8s with a +3 to the total)
+           !roll 2d8, 2d6      (comma-separated: two d8s and two d6s)
+           !roll d20
+           1d8                 (multi-line: one d20 and one d8)
 
         :param ctx: the discord command context object
         :type ctx: discord.ext.commands.Context
+        :param args: Dice and modifiers to roll
+        :type args: str
 
         """
 
-        await self.client.say('roll')
+        name = ctx.message.author.display_name
+
+        if args is None:
+            return
+
+        args = args.replace(' ', '')
+        results = []
+        all_dice = []
+
+        for dice in re.split('[,\n]', args):
+            if len(dice) > 0:
+                all_dice.append(dice)
+
+        for dice in all_dice:
+            single_mod = 0
+            if re.match('\\(.*\\)', dice):
+                dice, single_mod = dice[1:].split(')')
+
+                try:
+                    single_mod = int(single_mod) if single_mod else 0
+                except ValueError:
+                    await self.client.say(f'{name} used an invalid modifier: '
+                                          f'[{single_mod}]')
+                    return
+
+            try:
+                dice_parts, = re.findall(self.DICE_PATTERN, dice)
+                num, sides, mod = dice_parts
+            except ValueError:
+                await self.client.say(f'{name} made an invalid roll: [{dice}]')
+                return
+
+            if sides not in self.VALID_DICE:
+                await self.client.say(f'Allowed dice are: '
+                                      f'{self.get_valid_dice()}')
+                return
+
+            mod = int(mod) if mod else 0
+
+            roll = []
+            crit = False
+            fumble = False
+            for i in range(int(num) if num else 1):
+                base = random.randint(1, int(sides))
+                if sides == '20' and base == 20:
+                    crit = True
+                elif sides == '20' and base == 1:
+                    fumble = True
+                roll.append(base + mod)
+
+            if single_mod != 0:
+                result = (f'{name} rolled a {dice} with a '
+                          f'{single_mod:+d} modifier! The result was:\n '
+                          f'{roll}, Total: {sum(roll) + single_mod} '
+                          f'({sum(roll)}{single_mod:+d})')
+            else:
+                result = (f'{name} rolled a {dice}! The result was:\n '
+                          f'{roll}, Total: {sum(roll)}')
+
+            result += self.get_d20_minmax_msg(crit, fumble)
+
+            results.append(result)
+
+        await self.client.say('\n\n'.join(results))
 
 
 def setup(client):
