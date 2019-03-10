@@ -13,8 +13,12 @@ class Manage:
     def __init__(self, client):
         self.client = client
 
+    async def on_ready(self):
+        print('Bot online.')
+
     async def on_message_delete(self, message):
         """The on_message_delete method."""
+
         await self.client.send_message(message.channel, 'Message deleted.')
 
     @commands.command(pass_context=True)

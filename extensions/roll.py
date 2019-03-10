@@ -19,11 +19,6 @@ class Roll:
     def __init__(self, client):
         self.client = client
 
-    async def on_message_delete(self, message):
-        """The on_message_delete method"""
-
-        await self.client.send_message(message.channel, 'Message deleted.')
-
     def get_valid_dice(self):
         """Return string representation of valid dice types."""
 

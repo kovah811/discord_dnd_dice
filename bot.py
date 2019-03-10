@@ -17,12 +17,9 @@ def get_extensions(extensions_dir):
     return extensions
 
 
-@client.event
-async def on_ready():
-    print('Bot online.')
-
-
 if __name__ == '__main__':
+    client = commands.Bot(command_prefix=['!', '.'])
+
     for extension in get_extensions('extensions'):
         try:
             client.load_extension(extension)
