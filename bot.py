@@ -12,8 +12,9 @@ def get_extensions(extensions_dir):
     extensions = []
     for file in listdir(extensions_dir):
         if isfile(join(extensions_dir, file)):
-            extensions.append('.'.join([extensions_dir,
-                                        file.replace('.py', '')]))
+            extensions.append(
+                '.'.join([extensions_dir, file.replace('.py', '')])
+            )
     return extensions
 
 

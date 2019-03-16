@@ -40,8 +40,10 @@ class Manage:
             self.client.load_extension('.'.join(['extensions', extension]))
             print(f'{author} loaded {extension}.')
         except Exception as error:
-            print(f'{author} tried to load {extension}, but {extension} '
-                  f'could not be loaded. [{error}]')
+            print(
+                f'{author} tried to load {extension}, but {extension} '
+                f'could not be loaded. [{error}]'
+            )
 
     @commands.command(pass_context=True)
     async def unload(self, ctx, extension):
@@ -67,8 +69,10 @@ class Manage:
             self.client.unload_extension(extension)
             print(f'{author} unloaded {extension}.')
         except Exception as error:
-            print(f'{author} tried to unload {extension}, but {extension} '
-                  f'could not be unloaded. [{error}]')
+            print(
+                f'{author} tried to unload {extension}, but {extension} '
+                f'could not be unloaded. [{error}]'
+            )
 
 
 def setup(client):

@@ -38,9 +38,11 @@ class Roll:
         msg = ''
 
         if crit is True and fumble is True:
-            msg = ('  --  Natural 20 and natural 1!\n '
-                   'If rolling advantage, Crit!\n '
-                   'If rolling disadvantage, Fumble!')
+            msg = (
+                '  --  Natural 20 and natural 1!\n '
+                'If rolling advantage, Crit!\n '
+                'If rolling disadvantage, Fumble!'
+            )
         elif crit is True:
             msg = '  --  Natural 20! (Crit)'
         elif fumble is True:
@@ -68,8 +70,10 @@ class Roll:
         try:
             num_dice = int(num_dice)
         except ValueError:
-            await self.client.say(f'{name} made an invalid roll: [{num_dice}] '
-                                  f'is not a valid number of dice.')
+            await self.client.say(
+                f'{name} made an invalid roll: [{num_dice}] '
+                f'is not a valid number of dice.'
+            )
             return
 
         for i in range(num_dice):
@@ -82,8 +86,10 @@ class Roll:
 
         minmax_msg = self.get_d20_minmax_msg(crit, fumble)
 
-        await self.client.say(f'{name} rolled a {num_dice}d20!\n'
-                              f'The result was: {result} {minmax_msg}')
+        await self.client.say(
+            f'{name} rolled a {num_dice}d20!\n'
+            f'The result was: {result} {minmax_msg}'
+        )
 
     @commands.command(pass_context=True)
     async def roll(self, ctx, *, args=None):
@@ -127,8 +133,9 @@ class Roll:
                 try:
                     single_mod = int(single_mod) if single_mod else 0
                 except ValueError:
-                    await self.client.say(f'{name} used an invalid modifier: '
-                                          f'[{single_mod}]')
+                    await self.client.say(
+                        f'{name} used an invalid modifier: ' f'[{single_mod}]'
+                    )
                     return
 
             try:
@@ -139,8 +146,9 @@ class Roll:
                 return
 
             if sides not in self.VALID_DICE:
-                await self.client.say(f'Allowed dice are: '
-                                      f'{self.get_valid_dice()}')
+                await self.client.say(
+                    f'Allowed dice are: ' f'{self.get_valid_dice()}'
+                )
                 return
 
             mod = int(mod) if mod else 0
@@ -157,13 +165,17 @@ class Roll:
                 roll.append(base + mod)
 
             if single_mod != 0:
-                result = (f'{name} rolled a {dice} with a '
-                          f'{single_mod:+d} modifier! The result was:\n '
-                          f'{roll}, Total: {sum(roll) + single_mod} '
-                          f'({sum(roll)}{single_mod:+d})')
+                result = (
+                    f'{name} rolled a {dice} with a '
+                    f'{single_mod:+d} modifier! The result was:\n '
+                    f'{roll}, Total: {sum(roll) + single_mod} '
+                    f'({sum(roll)}{single_mod:+d})'
+                )
             else:
-                result = (f'{name} rolled a {dice}! The result was:\n '
-                          f'{roll}, Total: {sum(roll)}')
+                result = (
+                    f'{name} rolled a {dice}! The result was:\n '
+                    f'{roll}, Total: {sum(roll)}'
+                )
 
             result += self.get_d20_minmax_msg(crit, fumble)
 
