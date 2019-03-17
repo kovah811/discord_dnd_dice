@@ -51,7 +51,8 @@ class Dice:
 
         if self.sides not in self.VALID_SIDES:
             raise ValueError(
-                f'[{self.raw}] Allowed dice are: {self.valid_dice}.')
+                f'[{self.raw}] Allowed dice are: {self.valid_dice}.'
+            )
 
     @property
     def raw(self):
@@ -153,9 +154,7 @@ class Roll:
         try:
             dice = Dice(num_dice, '20', '', '')
         except ValueError as e:
-            await self.client.say(
-                f'{name} made an invalid roll: {e}'
-            )
+            await self.client.say(f'{name} made an invalid roll: {e}')
             return
 
         for i in range(dice.quantity):
@@ -228,9 +227,7 @@ class Roll:
             try:
                 dice = Dice(num, sides, mod, single_mod)
             except ValueError as e:
-                await self.client.say(
-                    f'{name} made an invalid roll: {e}'
-                )
+                await self.client.say(f'{name} made an invalid roll: {e}')
                 return
 
             rolls = []
