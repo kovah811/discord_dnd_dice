@@ -249,14 +249,14 @@ class Roll:
 
             if dice.single_mod != 0:
                 result = (
-                    f'{name} rolled a {dice_input} with a '
+                    f'{name} rolled a {dice.raw} with a '
                     f'{dice.raw_single_mod} modifier! The result was:\n '
                     f'{raw_rolls}, Total: {sum_rolls + dice.single_mod} '
                     f'({sum_rolls}{dice.raw_single_mod})'
                 )
             else:
                 result = (
-                    f'{name} rolled a {dice_input}! The result was:\n '
+                    f'{name} rolled a {dice.raw}! The result was:\n '
                     f'{raw_rolls}, Total: {sum_rolls}'
                 )
 
