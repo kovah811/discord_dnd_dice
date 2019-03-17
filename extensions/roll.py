@@ -1,15 +1,40 @@
 import random
 import re
 
+from dataclasses import dataclass
+
 import discord
 from discord.ext import commands
 
 
+@dataclass()
 class Dice:
-    def __init__(self, quantity, sides, modifier):
-        self.quantity = int(quantity) if quantity else 1
-        self.sides = int(sides)
-        self.modifier = int(modifier) if modifier else 0
+    quantity: str
+    sides: str
+    modifier: str
+
+    def __post_init__(self):
+        self.quantity = int(self.quantity) if self.quantity else 1
+        self.sides = int(self.sides)
+        self.modifier = int(self.modifier) if self.modifier else 0
+
+
+@dataclass()
+class DiceRoll:
+    base: int = 0
+    modifier: int = 0
+    crit: bool = False
+    fumble: bool = False
+
+    def total(self):
+        return self.base + self.modifier
+
+    def raw(self):
+        if self.modifier != 0:
+            mod = f'{self.modifier:+d}'
+        else:
+            mod = ''
+        return f'{str(self.base)}{mod}'
 
 
 class Roll:
@@ -32,17 +57,23 @@ class Roll:
         return ', '.join(['d' + str(d) for d in self.VALID_DICE])
 
     @staticmethod
-    def get_d20_minmax_msg(crit, fumble):
-        """Return a message to append to results if d20 roll is 1 or 20.
+    def get_d20_minmax_msg(rolls):
+        """Return a message to append to results if a d20 roll is 1 or 20.
 
-        :param crit: Whether or not a natural 20 was rolled
-        :type crit: bool
-        :param fumble: Whether or not a natural 1 was rolled
-        :type fumble: bool
+        :param rolls: list of dice rolls
+        :type rolls: list of DiceRoll
 
         """
 
         msg = ''
+        crit = False
+        fumble = False
+
+        for roll in rolls:
+            if roll.crit is True:
+                crit = True
+            elif roll.fumble is True:
+                fumble = True
 
         if crit is True and fumble is True:
             msg = (
@@ -168,31 +199,34 @@ class Roll:
                 )
                 return
 
-            roll = []
-            crit = False
-            fumble = False
+            rolls = []
+
             for i in range(dice.quantity):
-                base_roll = random.randint(1, dice.sides)
-                if dice.sides == 20 and base_roll == 20:
-                    crit = True
-                elif dice.sides == 20 and base_roll == 1:
-                    fumble = True
-                roll.append(base_roll + dice.modifier)
+                dice_roll = DiceRoll(modifier=dice.modifier)
+                dice_roll.base = random.randint(1, dice.sides)
+                if dice.sides == 20 and dice_roll.base == 20:
+                    dice_roll.crit = True
+                elif dice.sides == 20 and dice_roll.base == 1:
+                    dice_roll.fumble = True
+                rolls.append(dice_roll)
+
+            raw_rolls = [roll.raw() for roll in rolls]
+            sum_rolls = sum([roll.total() for roll in rolls])
 
             if single_mod != 0:
                 result = (
                     f'{name} rolled a {dice_input} with a '
                     f'{single_mod:+d} modifier! The result was:\n '
-                    f'{roll}, Total: {sum(roll) + single_mod} '
-                    f'({sum(roll)}{single_mod:+d})'
+                    f'{raw_rolls}, Total: {sum_rolls + single_mod} '
+                    f'({sum_rolls}{single_mod:+d})'
                 )
             else:
                 result = (
                     f'{name} rolled a {dice_input}! The result was:\n '
-                    f'{roll}, Total: {sum(roll)}'
+                    f'{raw_rolls}, Total: {sum_rolls}'
                 )
 
-            result += self.get_d20_minmax_msg(crit, fumble)
+            result += self.get_d20_minmax_msg(rolls)
 
             results.append(result)
 
