@@ -93,8 +93,8 @@ class Roll:
         minmax_msg = self.get_d20_minmax_msg(crit, fumble)
 
         await self.client.say(
-            f'{name} rolled a {num_dice}d20!\n'
-            f'The result was: {result} {minmax_msg}'
+            f'{name} rolled a {num_dice}d20! The result was:\n '
+            f'{result} {minmax_msg}'
         )
 
     @commands.command(pass_context=True)
