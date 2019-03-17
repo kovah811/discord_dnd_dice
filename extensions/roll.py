@@ -54,6 +54,12 @@ class Roll:
     async def d20(self, ctx, num_dice='1'):
         """Roll one (default) or more d20 dice.
 
+        Examples:
+
+           !d20             (1d20)
+           !d20 2           (2d20)
+           !d20 3           (3d20)
+
         :param ctx: the discord command context object
         :type ctx: discord.ext.commands.Context
         :param num_dice: Number of dice; 1 by default
@@ -95,7 +101,7 @@ class Roll:
     async def roll(self, ctx, *, args=None):
         """Roll the specified dice plus optional modifiers
 
-        Example rolls:
+        Examples:
 
            !roll d6            (one d6)
            !roll 2d8           (two d8s)

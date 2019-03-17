@@ -27,6 +27,10 @@ class Manage:
     async def load(self, ctx, extension):
         """Loads an extension/cog.
 
+        Example:
+
+           !load roll           (loads the roll cog)
+
         :param ctx: the discord command context object
         :type ctx: discord.ext.commands.Context
         :param extension: extension/cog to load
@@ -50,6 +54,10 @@ class Manage:
         """Unloads an extension/cog.
 
         Note: The 'manage' cog is not allowed to be unloaded.
+
+        Example:
+
+           !unload roll         (unloads the roll cog)
 
         :param ctx: the discord command context object
         :type ctx: discord.ext.commands.Context
