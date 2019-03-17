@@ -9,6 +9,8 @@ from discord.ext import commands
 
 @dataclass()
 class Dice:
+    """Represents a dice."""
+
     raw_quantity: str
     raw_sides: str
     raw_modifier: str
@@ -56,6 +58,8 @@ class Dice:
 
     @property
     def raw(self):
+        """Return raw string representation of the dice."""
+
         return f'{self.raw_quantity}d{self.raw_sides}{self.raw_modifier or ""}'
 
     @property
@@ -67,6 +71,8 @@ class Dice:
 
 @dataclass()
 class DiceRoll:
+    """Represents a dice roll."""
+
     base: int = 0
     modifier: int = 0
     crit: bool = False
@@ -74,10 +80,13 @@ class DiceRoll:
 
     @property
     def total(self):
+        """Returns the sum of the base roll value plus the modifier."""
+
         return self.base + self.modifier
 
     @property
     def raw(self):
+        """Returns a breakdown of the roll before being totaled."""
         if self.modifier != 0:
             mod = f'{self.modifier:+d}'
         else:
