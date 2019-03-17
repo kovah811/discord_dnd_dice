@@ -5,6 +5,13 @@ import discord
 from discord.ext import commands
 
 
+class Dice:
+    def __init__(self, quantity, sides, modifier):
+        self.quantity = int(quantity) if quantity else 1
+        self.sides = int(sides)
+        self.modifier = int(modifier) if modifier else 0
+
+
 class Roll:
     """The Roll cog.
 
@@ -14,7 +21,7 @@ class Roll:
     """
 
     DICE_PATTERN = re.compile(r"^(\d*)d(\d+)([-+]\d+)?$")
-    VALID_DICE = ['4', '6', '8', '10', '12', '20', '100']
+    VALID_DICE = [4, 6, 8, 10, 12, 20, 100]
 
     def __init__(self, client):
         self.client = client
@@ -22,7 +29,7 @@ class Roll:
     def get_valid_dice(self):
         """Return string representation of valid dice types."""
 
-        return ', '.join(['d' + d for d in self.VALID_DICE])
+        return ', '.join(['d' + str(d) for d in self.VALID_DICE])
 
     @staticmethod
     def get_d20_minmax_msg(crit, fumble):
@@ -125,16 +132,16 @@ class Roll:
 
         args = args.replace(' ', '')
         results = []
-        all_dice = []
+        all_dice_input = []
 
-        for dice in re.split('[,\n]', args):
-            if len(dice) > 0:
-                all_dice.append(dice)
+        for dice_input in re.split('[,\n]', args):
+            if len(dice_input) > 0:
+                all_dice_input.append(dice_input)
 
-        for dice in all_dice:
+        for dice_input in all_dice_input:
             single_mod = 0
-            if re.match('\\(.*\\)', dice):
-                dice, single_mod = dice[1:].split(')')
+            if re.match('\\(.*\\)', dice_input):
+                dice_input, single_mod = dice_input[1:].split(')')
 
                 try:
                     single_mod = int(single_mod) if single_mod else 0
@@ -145,41 +152,43 @@ class Roll:
                     return
 
             try:
-                dice_parts, = re.findall(self.DICE_PATTERN, dice)
+                dice_parts, = re.findall(self.DICE_PATTERN, dice_input)
                 num, sides, mod = dice_parts
+                dice = Dice(num, sides, mod)
             except ValueError:
-                await self.client.say(f'{name} made an invalid roll: [{dice}]')
+                await self.client.say(
+                    f'{name} made an invalid roll: [{dice_input}]'
+                )
                 return
 
-            if sides not in self.VALID_DICE:
+            if dice.sides not in self.VALID_DICE:
                 await self.client.say(
+                    f'{name} made an invalid roll: [{dice_input}]\n'
                     f'Allowed dice are: {self.get_valid_dice()}'
                 )
                 return
 
-            mod = int(mod) if mod else 0
-
             roll = []
             crit = False
             fumble = False
-            for i in range(int(num) if num else 1):
-                base = random.randint(1, int(sides))
-                if sides == '20' and base == 20:
+            for i in range(dice.quantity):
+                base_roll = random.randint(1, dice.sides)
+                if dice.sides == 20 and base_roll == 20:
                     crit = True
-                elif sides == '20' and base == 1:
+                elif dice.sides == 20 and base_roll == 1:
                     fumble = True
-                roll.append(base + mod)
+                roll.append(base_roll + dice.modifier)
 
             if single_mod != 0:
                 result = (
-                    f'{name} rolled a {dice} with a '
+                    f'{name} rolled a {dice_input} with a '
                     f'{single_mod:+d} modifier! The result was:\n '
                     f'{roll}, Total: {sum(roll) + single_mod} '
                     f'({sum(roll)}{single_mod:+d})'
                 )
             else:
                 result = (
-                    f'{name} rolled a {dice}! The result was:\n '
+                    f'{name} rolled a {dice_input}! The result was:\n '
                     f'{roll}, Total: {sum(roll)}'
                 )
 
