@@ -9,14 +9,14 @@ from discord.ext import commands
 
 @dataclass()
 class Dice:
-    quantity: str
-    sides: str
-    modifier: str
+    raw_quantity: str
+    raw_sides: str
+    raw_modifier: str
 
     def __post_init__(self):
-        self.quantity = int(self.quantity) if self.quantity else 1
-        self.sides = int(self.sides)
-        self.modifier = int(self.modifier) if self.modifier else 0
+        self.quantity = int(self.raw_quantity) if self.raw_quantity else 1
+        self.sides = int(self.raw_sides)
+        self.modifier = int(self.raw_modifier) if self.raw_modifier else 0
 
 
 @dataclass()
