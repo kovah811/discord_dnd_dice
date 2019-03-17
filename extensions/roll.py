@@ -134,7 +134,7 @@ class Roll:
                     single_mod = int(single_mod) if single_mod else 0
                 except ValueError:
                     await self.client.say(
-                        f'{name} used an invalid modifier: ' f'[{single_mod}]'
+                        f'{name} used an invalid modifier: [{single_mod}]'
                     )
                     return
 
@@ -147,7 +147,7 @@ class Roll:
 
             if sides not in self.VALID_DICE:
                 await self.client.say(
-                    f'Allowed dice are: ' f'{self.get_valid_dice()}'
+                    f'Allowed dice are: {self.get_valid_dice()}'
                 )
                 return
 
