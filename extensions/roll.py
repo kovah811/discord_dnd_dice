@@ -12,11 +12,56 @@ class Dice:
     raw_quantity: str
     raw_sides: str
     raw_modifier: str
+    raw_single_mod: str
+    VALID_SIDES = [4, 6, 8, 10, 12, 20, 100]
 
     def __post_init__(self):
-        self.quantity = int(self.raw_quantity) if self.raw_quantity else 1
-        self.sides = int(self.raw_sides)
-        self.modifier = int(self.raw_modifier) if self.raw_modifier else 0
+        try:
+            self.quantity = int(self.raw_quantity) if self.raw_quantity else 1
+        except ValueError:
+            raise ValueError(
+                f'[{self.raw_quantity}] quantity must be a number'
+            )
+
+        try:
+            self.sides = int(self.raw_sides)
+        except ValueError:
+            raise ValueError(
+                f'[{self.raw_sides}] number of sides must be a number'
+            )
+
+        try:
+            self.modifier = int(self.raw_modifier) if self.raw_modifier else 0
+        except ValueError:
+            raise ValueError(f'[{self.raw_modifier}] is not a valid modifier.')
+
+        try:
+            self.single_mod = (
+                int(self.raw_single_mod) if self.raw_single_mod else 0
+            )
+        except ValueError:
+            raise ValueError(
+                f'[{self.raw_single_mod}] is not a valid modifier.'
+            )
+
+        if self.quantity < 1:
+            raise ValueError(
+                f'[{self.quantity}] is not a valid number of dice.'
+            )
+
+        if self.sides not in self.VALID_SIDES:
+            raise ValueError(
+                f'[{self.raw}] Allowed dice are: {self.valid_dice}.')
+
+    @property
+    def raw(self):
+        return f'{self.raw_quantity}d{self.raw_sides}{self.raw_modifier or ""}'
+
+    @property
+    def valid_dice(self):
+        """Return string representation of valid dice types."""
+
+        return ', '.join(['d' + str(d) for d in self.VALID_SIDES])
 
 
 @dataclass()
@@ -26,9 +71,11 @@ class DiceRoll:
     crit: bool = False
     fumble: bool = False
 
+    @property
     def total(self):
         return self.base + self.modifier
 
+    @property
     def raw(self):
         if self.modifier != 0:
             mod = f'{self.modifier:+d}'
@@ -46,15 +93,9 @@ class Roll:
     """
 
     DICE_PATTERN = re.compile(r"^(\d*)d(\d+)([-+]\d+)?$")
-    VALID_DICE = [4, 6, 8, 10, 12, 20, 100]
 
     def __init__(self, client):
         self.client = client
-
-    def get_valid_dice(self):
-        """Return string representation of valid dice types."""
-
-        return ', '.join(['d' + str(d) for d in self.VALID_DICE])
 
     @staticmethod
     def get_d20_minmax_msg(rolls):
@@ -107,32 +148,32 @@ class Roll:
 
         name = ctx.message.author.display_name
 
-        result = []
-        crit = False
-        fumble = False
+        rolls = []
 
         try:
-            num_dice = int(num_dice)
-        except ValueError:
+            dice = Dice(num_dice, '20', '', '')
+        except ValueError as e:
             await self.client.say(
-                f'{name} made an invalid roll: [{num_dice}] '
-                f'is not a valid number of dice.'
+                f'{name} made an invalid roll: {e}'
             )
             return
 
-        for i in range(num_dice):
-            roll = random.randint(1, 20)
-            if roll == 20:
-                crit = True
-            elif roll == 1:
-                fumble = True
-            result.append(roll)
+        for i in range(dice.quantity):
+            dice_roll = DiceRoll()
+            dice_roll.base = random.randint(1, dice.sides)
+            if dice_roll.base == 20:
+                dice_roll.crit = True
+            elif dice_roll.base == 1:
+                dice_roll.fumble = True
+            rolls.append(dice_roll)
 
-        minmax_msg = self.get_d20_minmax_msg(crit, fumble)
+        raw_rolls = [roll.raw for roll in rolls]
+
+        minmax_msg = self.get_d20_minmax_msg(rolls)
 
         await self.client.say(
-            f'{name} rolled a {num_dice}d20! The result was:\n '
-            f'{result} {minmax_msg}'
+            f'{name} rolled a {dice.quantity}d20! The result was:\n '
+            f'{raw_rolls} {minmax_msg}'
         )
 
     @commands.command(pass_context=True)
@@ -170,32 +211,25 @@ class Roll:
                 all_dice_input.append(dice_input)
 
         for dice_input in all_dice_input:
-            single_mod = 0
+            single_mod = ''
             if re.match('\\(.*\\)', dice_input):
                 dice_input, single_mod = dice_input[1:].split(')')
-
-                try:
-                    single_mod = int(single_mod) if single_mod else 0
-                except ValueError:
-                    await self.client.say(
-                        f'{name} used an invalid modifier: [{single_mod}]'
-                    )
-                    return
+                single_mod = single_mod if single_mod else ''
 
             try:
                 dice_parts, = re.findall(self.DICE_PATTERN, dice_input)
                 num, sides, mod = dice_parts
-                dice = Dice(num, sides, mod)
             except ValueError:
                 await self.client.say(
                     f'{name} made an invalid roll: [{dice_input}]'
                 )
                 return
 
-            if dice.sides not in self.VALID_DICE:
+            try:
+                dice = Dice(num, sides, mod, single_mod)
+            except ValueError as e:
                 await self.client.say(
-                    f'{name} made an invalid roll: [{dice_input}]\n'
-                    f'Allowed dice are: {self.get_valid_dice()}'
+                    f'{name} made an invalid roll: {e}'
                 )
                 return
 
@@ -210,15 +244,15 @@ class Roll:
                     dice_roll.fumble = True
                 rolls.append(dice_roll)
 
-            raw_rolls = [roll.raw() for roll in rolls]
-            sum_rolls = sum([roll.total() for roll in rolls])
+            raw_rolls = [roll.raw for roll in rolls]
+            sum_rolls = sum([roll.total for roll in rolls])
 
-            if single_mod != 0:
+            if dice.single_mod != 0:
                 result = (
                     f'{name} rolled a {dice_input} with a '
-                    f'{single_mod:+d} modifier! The result was:\n '
-                    f'{raw_rolls}, Total: {sum_rolls + single_mod} '
-                    f'({sum_rolls}{single_mod:+d})'
+                    f'{dice.raw_single_mod} modifier! The result was:\n '
+                    f'{raw_rolls}, Total: {sum_rolls + dice.single_mod} '
+                    f'({sum_rolls}{dice.raw_single_mod})'
                 )
             else:
                 result = (
