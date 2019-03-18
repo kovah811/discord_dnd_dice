@@ -181,7 +181,7 @@ class Roll:
         minmax_msg = self.get_d20_minmax_msg(rolls)
 
         await self.client.say(
-            f'{name} rolled a {dice.quantity}d20! The result was:\n '
+            f'{name} rolled a {dice.quantity}d{dice.sides}! The result was:\n '
             f'{raw_rolls} {minmax_msg}'
         )
 
