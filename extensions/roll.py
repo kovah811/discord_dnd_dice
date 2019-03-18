@@ -87,6 +87,7 @@ class DiceRoll:
     @property
     def raw(self):
         """Returns a breakdown of the roll before being totaled."""
+        
         if self.modifier != 0:
             mod = f'{self.modifier:+d}'
         else:
