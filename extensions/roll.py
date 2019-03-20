@@ -68,6 +68,20 @@ class Dice:
 
         return ', '.join(['d' + str(d) for d in self.VALID_SIDES])
 
+    def roll(self):
+        rolls = []
+
+        for i in range(self.quantity):
+            dice_roll = DiceRoll(modifier=self.modifier)
+            dice_roll.base = random.randint(1, self.sides)
+            if self.sides == 20 and dice_roll.base == 20:
+                dice_roll.crit = True
+            elif self.sides == 20 and dice_roll.base == 1:
+                dice_roll.fumble = True
+            rolls.append(dice_roll)
+
+        return rolls
+
 
 @dataclass()
 class DiceRoll:
@@ -159,22 +173,13 @@ class Roll:
 
         name = ctx.message.author.display_name
 
-        rolls = []
-
         try:
             dice = Dice(num_dice, '20', '', '')
         except ValueError as e:
             await self.client.say(f'{name} made an invalid roll: {e}')
             return
 
-        for i in range(dice.quantity):
-            dice_roll = DiceRoll()
-            dice_roll.base = random.randint(1, dice.sides)
-            if dice_roll.base == 20:
-                dice_roll.crit = True
-            elif dice_roll.base == 1:
-                dice_roll.fumble = True
-            rolls.append(dice_roll)
+        rolls = dice.roll()
 
         raw_rolls = [roll.raw for roll in rolls]
 
@@ -240,16 +245,7 @@ class Roll:
                 await self.client.say(f'{name} made an invalid roll: {e}')
                 return
 
-            rolls = []
-
-            for i in range(dice.quantity):
-                dice_roll = DiceRoll(modifier=dice.modifier)
-                dice_roll.base = random.randint(1, dice.sides)
-                if dice.sides == 20 and dice_roll.base == 20:
-                    dice_roll.crit = True
-                elif dice.sides == 20 and dice_roll.base == 1:
-                    dice_roll.fumble = True
-                rolls.append(dice_roll)
+            rolls = dice.roll()
 
             raw_rolls = [roll.raw for roll in rolls]
             sum_rolls = sum([roll.total for roll in rolls])
