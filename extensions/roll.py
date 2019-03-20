@@ -69,6 +69,12 @@ class Dice:
         return ', '.join(['d' + str(d) for d in self.VALID_SIDES])
 
     def roll(self):
+        """Rolls the dice.
+
+        :returns: A list of DiceRoll objects
+        :rtype: list of DiceRoll
+
+        """
         rolls = []
 
         for i in range(self.quantity):
